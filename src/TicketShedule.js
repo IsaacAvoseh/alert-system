@@ -131,7 +131,7 @@ function TicketShedule() {
         //             </Box>
         // </Container>
         <Container>
-            <Button onClick={sst} > Play </Button>
+            {/* <Button onClick={sst} > Play </Button> */}
 
 
             <Table variant='striped' colorScheme='teal'>
