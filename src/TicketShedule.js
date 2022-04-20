@@ -32,7 +32,7 @@ function TicketShedule() {
     const getNewTickets = () => {
         console.log('first')
 
-        fetch('http://192.168.43.6:8000/api/mails')
+        fetch('http://127.0.0.1:9000/api/mails')
             .then(res => res.json())
             .then(data => {
                 console.log('All Data',data)
@@ -83,53 +83,7 @@ function TicketShedule() {
 
 
     return (
-        // <Container>
-        //     <Button onClick={sst} > Play </Button>
-        //         <Box display={'flex'} >
-        //         <VStack mx={2}>
-        //             <Heading>Reception</Heading>
-        //                 {
-        //                     reception?.map(item => <Heading>{ item.reception }</Heading>)
-        //                 }
-        //         </VStack>
-        //      <VStack mx={2}> 
-        //         <Heading>Billing</Heading>
-        //         {
-                    
-        //             billing?.map(item => <Heading>{item.billing}</Heading>)
-        //                             } 
-        //      </VStack>
-
-        //         <VStack mx={2}>
-        //             <Heading>Synlab</Heading>
-
-        //             { synlab?.map(item => <Heading>{item.synlab}</Heading>) } 
-
-        //              </VStack>
-
-        //         <VStack mx={2}> 
-        //             <Heading>Reception</Heading>
-
-
-        //                     {
-        //                 billing?.map(item => <Heading>{item.billing}</Heading>)
-        //                     }
-        //                  </VStack>
-        //         {/* <VStack mx={2}> 
-        //                     {
-        //                 pharmacy?.map(item => <Heading>{item.reception}</Heading>)
-        //                     }
-
-        //                  </VStack> */}
-        //                 <VStack mx={2}>
-        //             <Heading>Vital</Heading>
-
-        //                      {
-        //                          vital?.map(item => <Heading>{ item.vital }</Heading>)
-        //                      }
-        //                  </VStack>
-        //             </Box>
-        // </Container>
+      
         <Container>
             {/* <Button onClick={sst} > Play </Button> */}
 
