@@ -1,4 +1,4 @@
-import { Box, Container, Table, TableCaption, Tbody, Td, Tfoot, Th, Thead, Tr, Text, Button, VStack, Heading, Select } from '@chakra-ui/react'
+import { Box, Container, Table, TableCaption, Tbody, Td, Tfoot, Th, Thead, Tr, Text, Button, VStack, Heading, Select, Flex, Divider } from '@chakra-ui/react'
 import React from 'react'
 import sound from './ss.wav';
 import useSound from 'use-sound'
@@ -28,6 +28,7 @@ function TicketShedule() {
     const [newAppoved, setNewAppoved] = React.useState([])
     const [dispenced, setDispenced] = React.useState([])
     const [newDispenced, setNewDispenced] = React.useState([])
+    const [ userType, setUserType] = React.useState('')
 
     const beep = new UIfx(sound)
 
@@ -36,8 +37,9 @@ function TicketShedule() {
         console.log('first playdd')
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = () => {
         // e.preventDefault()
+        console.log('type', userType)
         setDisplay(false)
     }
 
@@ -46,28 +48,28 @@ function TicketShedule() {
     const getNewTickets = () => {
         console.log('first')
 
-        fetch('http://127.0.0.1:8000/api/mails')
-            .then(res => res.json())
-            .then(data => {
-                console.log('All Data', data)
-                setNewTickets(data.mails)
-                // setBilling(data.billing)
-                setReception(data.reception)
-                setPharmacy(data.pharmacy)
-                setVital(data.vital)
-                setSynlab(data.synlab)
-            })
+        // fetch('http://127.0.0.1:8000/api/mails')
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         console.log('All Data', data)
+        //         setNewTickets(data.mails)
+        //         // setBilling(data.billing)
+        //         setReception(data.reception)
+        //         setPharmacy(data.pharmacy)
+        //         setVital(data.vital)
+        //         setSynlab(data.synlab)
+        //    })
 
-        console.log('rec', reception)
-        console.log('rec', vital)
-        console.log('rec', pharmacy)
-        console.log('rec', tickets)
+        // console.log('rec', reception)
+        // console.log('rec', vital)
+        // console.log('rec', pharmacy)
+        // console.log('rec', tickets)
 
 
     }
 
     const getUsers = () => {
-        fetch('http://127.0.0.1:8000/api/users')
+        fetch('http://192.168.1.30/alert-system/alert/public/api/users')
             .then(res => res.json())
             .then(data => {
                 console.log('All Data', data)
@@ -76,16 +78,23 @@ function TicketShedule() {
     }
 
     const getData = () => {
-        fetch('http://127.0.0.1:8000/api/check')
+        // toast.success('New Data Found')
+
+        fetch('http://192.168.1.30/alert-system/alert/public/api/check')
+             //http://192.168.1.30/alert-system/alert/public/api/check
             .then(res => res.json())
             .then(data => {
                 console.log('billings data', data)
                 setNewBilling(data.billings)
                 setNewAppoved(data.approved)
                 setNewDispenced(data.dispense)
-
+                // toast.success('New Data Found')
                 setData(data)
             })
+    }
+
+    const handleRole = (item) => {
+        let type = setUserType(item.role)
     }
 
 
@@ -120,27 +129,14 @@ function TicketShedule() {
                 progress: undefined,
             });
         }
+        console.log('newBilling', newBilling)
 
         if (newBilling.length > billing.length) {
+            console.log('newBilling', newBilling)
             setBilling(newBilling)
-            sst()
-            toast('New Billing request', {
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-        }
-
-        if (newAppoved.length > appoved.length) {
-            setAppoved(newAppoved)
-            let lastdata = newAppoved[newAppoved.length - 1]
-            console.log('lastdata', lastdata)
-            if (lastdata.approved == '1') {
+            if(userType == '5'){
                 sst()
-                toast('New Patient Checked in', {
+                toast('New Billing request', {
                     autoClose: 5000,
                     hideProgressBar: false,
                     closeOnClick: true,
@@ -148,6 +144,25 @@ function TicketShedule() {
                     draggable: true,
                     progress: undefined,
                 });
+            }
+        }
+
+        if (newAppoved.length > appoved.length) {
+            setAppoved(newAppoved)
+            let lastdata = newAppoved[newAppoved.length - 1]
+            console.log('lastdata', lastdata)
+            if (lastdata.approved == '1') {
+               if(userType ==  '5'){
+                   sst()
+                   toast('New Patient Checked in', {
+                       autoClose: 5000,
+                       hideProgressBar: false,
+                       closeOnClick: true,
+                       pauseOnHover: true,
+                       draggable: true,
+                       progress: undefined,
+                   });
+               }
             }
 
         }
@@ -156,72 +171,77 @@ function TicketShedule() {
             setDispenced(newDispenced)
             let lastdata = newDispenced[newDispenced.length - 1]
             console.log('lastdata', lastdata)
-            if (lastdata.dispensed == 'yes') {
-                sst()
-                toast('Result ready', {
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
+            if (lastdata.dispensed == 'Yes') {
+                if(userType == '7'){
+                    sst()
+                    toast('Result ready', {
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
 
+                }
             }
         }
 
-    }, [newTickets])
+    }, [newBilling])
 
 
     return (
         <Container>
-            <Button onClick={sst} > Play </Button>
+            {/* <Button onClick={sst} > Play </Button> */}
 
 
 
             {
                 dsisplay ?
-                    <Box>
-                        <Select placeholder='Select option'>
-                            {
-                                users?.map(item => {
-                                    return (
-                                        <option key={item.id} value={item.id}>{item.name}</option>
-                                    )
-                                })
-                            }
-                        </Select>
-                        <Button onClick={handleSubmit}>Submit</Button>
-                    </Box>
-                    :
-                    <Table variant='striped' colorScheme='teal'>
-                        <Thead>
-                            <Tr>
-                                <Th>Reception</Th>
-                                <Th>Billing</Th>
-                                <Th>Synlab</Th>
-                                <Th>Vital</Th>
-                                <Th>Pharmacy</Th>
-                            </Tr>
-                        </Thead>
-                        <Tbody>
+                        <Box p={10}>
+                            <Flex direction={'column'} justifyContent='center' alignItems={'center'} >
+                            <Select value={userType} onChange={(e) => setUserType(e.target.value)} placeholder='Select option'>
+                                {
+                                    users?.map(item => {
+                                        return (
+                                            <option key={item.id} value={item.role}>{item.username}</option>
+                                        )
+                                    })
+                                }
+                            </Select>
+                            <Divider/>
+                            <Button mt={5} width={'200px'} colorScheme={'blue'} onClick={handleSubmit}>Submit</Button>
+                   </Flex>
+                        </Box>
+                    : ' '
+                    // <Table variant='striped' colorScheme='teal'>
+                    //     <Thead>
+                     //         <Tr>
+                    //             <Th>Reception</Th>
+                    //             <Th>Billing</Th>
+                    //             <Th>Synlab</Th>
+                    //             <Th>Vital</Th>
+                    //             <Th>Pharmacy</Th>
+                    //         </Tr>
+                    //     </Thead>
+                    //     <Tbody>
 
-                            {
-                                tickets?.map(item => {
-                                    return (
-                                        <Tr key={item.id}>
-                                            <Td>{item.reception}</Td>
-                                            <Td>{item.billing}</Td>
-                                            <Td>{item.synlab}</Td>
-                                            <Td>{item.vital}</Td>
-                                            <Td>{item.pharmacy}</Td>
-                                        </Tr>
-                                    )
-                                })
+                    //         {
+                    //             tickets?.map(item => {
+                    //                 return (
+                    //                     <Tr key={item.id}>
+                    //                         <Td>{item.reception}</Td>
+                    //                         <Td>{item.billing}</Td>
+                    //                         <Td>{item.synlab}</Td>
+                    //                         <Td>{item.vital}</Td>
+                    //                         <Td>{item.pharmacy}</Td>
+                    //                     </Tr>
+                    //                 )
+                    //             })
 
-                            }
-                        </Tbody>
-                    </Table>
+                    //         }
+                    //     </Tbody>
+                    // </Table>
 
             }
 
