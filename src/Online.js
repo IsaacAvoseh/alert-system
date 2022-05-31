@@ -6,7 +6,7 @@ import UIfx from 'uifx'
 import { toast } from 'react-toastify';
 
 
-function TicketShedule() {
+function Online() {
 
 
     const [play, { stop, pause }] = useSound(sound);
@@ -21,6 +21,9 @@ function TicketShedule() {
     const [vital, setVital] = React.useState([])
     const [synlab, setSynlab] = React.useState([])
     const [pharmacy, setPharmacy] = React.useState([])
+    const [newPharmacy, setNewPharmacy] = React.useState([])
+    const [laboratory, setLaboratory] = React.useState([])
+    const [newLaboratory, setNewLaboratory] = React.useState([])
     const [users, setUsers] = React.useState([])
     const [dsisplay, setDisplay] = React.useState(true)
     const [data, setData] = React.useState([])
@@ -28,7 +31,7 @@ function TicketShedule() {
     const [newAppoved, setNewAppoved] = React.useState([])
     const [dispenced, setDispenced] = React.useState([])
     const [newDispenced, setNewDispenced] = React.useState([])
-    const [ userType, setUserType] = React.useState('')
+    const [userType, setUserType] = React.useState('')
 
     const beep = new UIfx(sound)
 
@@ -69,7 +72,7 @@ function TicketShedule() {
     }
 
     const getUsers = () => {
-        fetch('http://192.168.1.30/alert-system/alert/public/api/users')
+        fetch()
             .then(res => res.json())
             .then(data => {
                 console.log('All Data', data)
@@ -80,14 +83,16 @@ function TicketShedule() {
     const getData = () => {
         // toast.success('New Data Found')
 
-        fetch('http://192.168.1.30/alert-system/alert/public/api/check')
-             //http://192.168.1.30/alert-system/alert/public/api/check
+        fetch('http://127.0.0.1:800/api/check')
+            //http://192.168.1.30/alert-system/alert/public/api/check
             .then(res => res.json())
             .then(data => {
                 console.log('billings data', data)
                 setNewBilling(data.billings)
                 setNewAppoved(data.approved)
                 setNewDispenced(data.dispense)
+                setNewPharmacy(data.pharmacy)
+                setNewLaboratory(data.laboratory)
                 // toast.success('New Data Found')
                 setData(data)
             })
@@ -134,9 +139,21 @@ function TicketShedule() {
         if (newBilling.length > billing.length) {
             console.log('newBilling', newBilling)
             setBilling(newBilling)
-            if(userType == '5'){
+            if (userType == '5') {
                 sst()
                 toast('New Billing request', {
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
+
+            if (userType == '3') {
+                sst()
+                toast('New Patient', {
                     autoClose: 5000,
                     hideProgressBar: false,
                     closeOnClick: true,
@@ -152,17 +169,17 @@ function TicketShedule() {
             let lastdata = newAppoved[newAppoved.length - 1]
             console.log('lastdata', lastdata)
             if (lastdata.approved == '1') {
-               if(userType ==  '5'){
-                   sst()
-                   toast('New Patient Checked in', {
-                       autoClose: 5000,
-                       hideProgressBar: false,
-                       closeOnClick: true,
-                       pauseOnHover: true,
-                       draggable: true,
-                       progress: undefined,
-                   });
-               }
+                if (userType == '5') {
+                    sst()
+                    toast('New Patient Checked in', {
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                }
             }
 
         }
@@ -172,7 +189,7 @@ function TicketShedule() {
             let lastdata = newDispenced[newDispenced.length - 1]
             console.log('lastdata', lastdata)
             if (lastdata.dispensed == 'Yes') {
-                if(userType == '7'){
+                if (userType == '7') {
                     sst()
                     toast('Result ready', {
                         autoClose: 5000,
@@ -180,7 +197,7 @@ function TicketShedule() {
                         closeOnClick: true,
                         pauseOnHover: true,
                         draggable: true,
-                        progress: undefined,
+                         progress: undefined,
                     });
 
                 }
@@ -198,8 +215,8 @@ function TicketShedule() {
 
             {
                 dsisplay ?
-                        <Box p={10}>
-                            <Flex direction={'column'} justifyContent='center' alignItems={'center'} >
+                    <Box p={10}>
+                        <Flex direction={'column'} justifyContent='center' alignItems={'center'} >
                             <Select value={userType} onChange={(e) => setUserType(e.target.value)} placeholder='Select option'>
                                 {
                                     users?.map(item => {
@@ -209,16 +226,16 @@ function TicketShedule() {
                                     })
                                 }
                             </Select>
-                            <Divider/>
+                            <Divider />
                             <Button mt={5} width={'200px'} colorScheme={'blue'} onClick={handleSubmit}>Submit</Button>
-                   </Flex>
-                        </Box>
+                        </Flex>
+                    </Box>
                     : ' '
-                    
+
             }
 
         </Container>
     )
 }
 
-export default TicketShedule
+export default Online
